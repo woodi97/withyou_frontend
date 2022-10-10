@@ -11,17 +11,22 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from 'next-themes';
 import qs from 'qs';
+import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { RecoilRoot } from 'recoil';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = envConfig.apiUrl;
-axios.defaults.headers.common['Authorization'] = getAuthToken();
+axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken()}`;
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
 };
 
 const App: NextPage = ({ Component, pageProps, router }: AppProps) => {
+  useEffect(() => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${getAuthToken()}`;
+  }, [router.pathname]);
+
   return (
     <>
       <Head>
